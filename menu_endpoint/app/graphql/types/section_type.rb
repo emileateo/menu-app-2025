@@ -6,6 +6,7 @@ module Types
     field :identifier, String
     field :label, String
     field :description, String
+    field :is_available, Boolean, null: false
     field :items, [ Types::ItemType ], null: false
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false

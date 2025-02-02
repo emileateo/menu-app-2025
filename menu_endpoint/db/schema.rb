@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_26_082932) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_02_151341) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -36,6 +36,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_26_082932) do
     t.float "price"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "available_quantity", default: 1
   end
 
   create_table "menu_sections", force: :cascade do |t|
@@ -100,6 +101,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_26_082932) do
     t.string "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "is_available", default: true
   end
 
   add_foreign_key "item_modifier_groups", "items"

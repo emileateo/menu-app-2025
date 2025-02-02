@@ -27,12 +27,17 @@ main_menu = Menu.create!(
   end_date: Date.today + 1.year
 )
 
+puts 'Menu Created'
+
 # Create Section 1: Pizzas (Configurable)
 pizza_section = Section.create!(
   identifier: 'classic_pizzas',
   label: 'Classic Pizzas',
-  description: 'Our signature pizzas with the finest ingredients.'
+  description: 'Our signature pizzas with the finest ingredients.',
+  is_available: true
 )
+
+puts 'Section Created'
 
 MenuSection.create!(menu: main_menu, section: pizza_section, display_order: 1)
 
@@ -42,7 +47,8 @@ pizza_margherita = Item.create!(
   identifier: 'margherita_pizza',
   label: 'Margherita Pizza',
   description: 'A classic pizza with fresh mozzarella, tomatoes, and basil.',
-  price: 10.0
+  price: 10.0,
+  available_quantity: 10
 )
 
 pizza_pepperoni = Item.create!(
@@ -50,8 +56,11 @@ pizza_pepperoni = Item.create!(
   identifier: 'pepperoni_pizza',
   label: 'Pepperoni Pizza',
   description: 'A pizza topped with spicy pepperoni and mozzarella.',
-  price: 12.0
+  price: 12.0,
+  available_quantity: 10
 )
+
+puts 'Pizza Items Created'
 
 SectionItem.create!(section: pizza_section, item: pizza_margherita, display_order: 1)
 SectionItem.create!(section: pizza_section, item: pizza_pepperoni, display_order: 2)
@@ -71,6 +80,8 @@ modifier_toppings = ModifierGroup.create!(
   selection_required_max: 3
 )
 
+puts 'Modifier Groups Created'
+
 # Link the modifiers to the item (for the configurable item)
 ItemModifierGroup.create!(item: pizza_margherita, modifier_group: modifier_size)
 ItemModifierGroup.create!(item: pizza_margherita, modifier_group: modifier_toppings)
@@ -79,7 +90,7 @@ ItemModifierGroup.create!(item: pizza_pepperoni, modifier_group: modifier_toppin
 
 # Create Modifiers for Size
 size_small = Modifier.create!(
-  item: Item.create!(type: 'Component', identifier: 'small_size', label: 'Small (10")'),
+  item: Item.create!(type: 'Component', identifier: 'small_size', label: 'Small (10")', price: 0),
   modifier_group: modifier_size,
   display_order: 1,
   default_quantity: 1,
@@ -87,7 +98,7 @@ size_small = Modifier.create!(
 )
 
 size_medium = Modifier.create!(
-  item: Item.create!(type: 'Component', identifier: 'medium_size', label: 'Medium (12")'),
+  item: Item.create!(type: 'Component', identifier: 'medium_size', label: 'Medium (12")', price: 0),
   modifier_group: modifier_size,
   display_order: 2,
   default_quantity: 1,
@@ -95,16 +106,18 @@ size_medium = Modifier.create!(
 )
 
 size_large = Modifier.create!(
-  item: Item.create!(type: 'Component', identifier: 'large_size', label: 'Large (15")'),
+  item: Item.create!(type: 'Component', identifier: 'large_size', label: 'Large (15")', price: 0),
   modifier_group: modifier_size,
   display_order: 3,
   default_quantity: 1,
   price_override: 5.0
 )
 
+puts 'Size Modifiers Created'
+
 # Create Modifiers for Extra Toppings
 toppings_mushrooms = Modifier.create!(
-  item: Item.create!(type: 'Component', identifier: 'mushrooms', label: 'Mushrooms'),
+  item: Item.create!(type: 'Component', identifier: 'mushrooms', label: 'Mushrooms', price: 1.5),
   modifier_group: modifier_toppings,
   display_order: 1,
   default_quantity: 0,
@@ -112,7 +125,7 @@ toppings_mushrooms = Modifier.create!(
 )
 
 toppings_cheese = Modifier.create!(
-  item: Item.create!(type: 'Component', identifier: 'extra_cheese', label: 'Extra Cheese'),
+  item: Item.create!(type: 'Component', identifier: 'extra_cheese', label: 'Extra Cheese', price: 2.0),
   modifier_group: modifier_toppings,
   display_order: 2,
   default_quantity: 0,
@@ -120,29 +133,35 @@ toppings_cheese = Modifier.create!(
 )
 
 toppings_olives = Modifier.create!(
-  item: Item.create!(type: 'Component', identifier: 'olives', label: 'Olives'),
+  item: Item.create!(type: 'Component', identifier: 'olives', label: 'Olives', price: 1.0),
   modifier_group: modifier_toppings,
   display_order: 3,
   default_quantity: 0,
   price_override: 1.0
 )
 
+puts 'Topping Modifiers Created'
+
 # Create Section 2: Desserts (Non-configurable)
 dessert_section = Section.create!(
   identifier: 'desserts',
   label: 'Desserts',
-  description: 'Sweet treats to end your meal.'
+  description: 'Sweet treats to end your meal.',
+  is_available: true
 )
+
+puts 'Dessert Section Created'
 
 MenuSection.create!(menu: main_menu, section: dessert_section, display_order: 2)
 
-# Create Items for Section 1 (Non-configurable)
+# Create Items for Dessert Section (Non-configurable)
 dessert_tiramisu = Item.create!(
   type: 'Product',
   identifier: 'tiramisu',
   label: 'Tiramisu',
   description: 'A classic Italian dessert with layers of coffee-soaked ladyfingers and mascarpone cheese.',
-  price: 6.0
+  price: 6.0,
+  available_quantity: 10,
 )
 
 dessert_panna_cotta = Item.create!(
@@ -150,11 +169,78 @@ dessert_panna_cotta = Item.create!(
   identifier: 'panna_cotta',
   label: 'Panna Cotta',
   description: 'A creamy vanilla custard topped with fresh berries.',
-  price: 5.0
+  price: 5.0,
+  available_quantity: 10,
 )
 
-# Add items to Section 1
+puts 'Dessert Items Created'
+
+# Add items to Dessert Section
 SectionItem.create!(section: dessert_section, item: dessert_tiramisu, display_order: 1)
 SectionItem.create!(section: dessert_section, item: dessert_panna_cotta, display_order: 2)
+
+# Create Section 3A: Drinks (Non-alcoholic)
+na_drinks_section = Section.create!(
+  identifier: 'na_drinks',
+  label: 'Non-Alcoholic Drinks',
+  description: 'A refreshing accompaniment to your meal.',
+  is_available: true
+)
+
+puts 'NA Drinks Section Created'
+
+MenuSection.create!(menu: main_menu, section: na_drinks_section, display_order: 3)
+
+# Create Items for Drinks Section (Non-configurable)
+na_drink_coffee = Item.create!(
+  type: 'Product',
+  identifier: 'coffee',
+  label: 'Coffee',
+  description: 'Brewed with freshly roasted beans.',
+  price: 4.0,
+  available_quantity: 10,
+)
+
+na_drink_matcha = Item.create!(
+  type: 'Product',
+  identifier: 'matcha_latte',
+  label: 'Matcha Latte',
+  description: 'Made with ceremonial grade matcha direct from Kyoto.',
+  price: 6.0,
+  available_quantity: 10,
+)
+
+puts 'NA Drink Items Created'
+
+# Add items to NA Drinks Section
+SectionItem.create!(section: na_drinks_section, item: na_drink_coffee, display_order: 1)
+SectionItem.create!(section: na_drinks_section, item: na_drink_matcha, display_order: 2)
+
+# Create Section 3B: Drinks (Alcoholic)
+alcoholic_drinks_section = Section.create!(
+  identifier: 'alcoholic_drinks',
+  label: 'Alcoholic Drinks',
+  description: '18+ only',
+  is_available: false
+)
+
+puts 'Alcoholic Drinks Section Created'
+
+MenuSection.create!(menu: main_menu, section: alcoholic_drinks_section, display_order: 4)
+
+# Create Items for Drinks Section (Non-configurable)
+alcoholic_drink_beer = Item.create!(
+  type: 'Product',
+  identifier: 'beer',
+  label: 'Beer',
+  description: 'Locally brewed tropical lager',
+  price: 6.0,
+  available_quantity: 10,
+)
+
+puts 'Alcoholic Drink Item Created'
+
+# Add items to Alcoholic Drinks Section
+SectionItem.create!(section: alcoholic_drinks_section, item: alcoholic_drink_beer, display_order: 1)
 
 puts 'Seed data has been successfully created!'
