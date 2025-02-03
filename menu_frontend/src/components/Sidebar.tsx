@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { motion } from 'framer-motion';
 import { useCart } from '../contexts/CartContext';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import CartModal from './CartModal';
 
 interface SidebarProps {
