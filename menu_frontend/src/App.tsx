@@ -1,46 +1,99 @@
-// import { useState } from 'react'
-// import reactLogo from './assets/react.svg'
-// import viteLogo from '/vite.svg'
+import styled from '@emotion/styled';
 import MenuPage from "./pages/MenuPage";
-
 import './App.css'
-import Sidebar from "./components/Sidebar";
+import { CartProvider } from './contexts/CartContext';
+import { gql, useQuery } from '@apollo/client';
+import { useEffect, useRef, useState } from 'react';
+import Sidebar from './components/Sidebar';
 
-// function App() {
-//   const [count, setCount] = useState(0)
+export const Content = styled.div`
+  display: flex;
+  flex-direction: column;
 
-//   return (
-//     <>
-//       <div>
-//         <a href="https://vite.dev" target="_blank">
-//           <img src={viteLogo} className="logo" alt="Vite logo" />
-//         </a>
-//         <a href="https://react.dev" target="_blank">
-//           <img src={reactLogo} className="logo react" alt="React logo" />
-//         </a>
-//       </div>
-//       <h1>Vite + React</h1>
-//       <div className="card">
-//         <button onClick={() => setCount((count) => count + 1)}>
-//           count is {count}
-//         </button>
-//         <p>
-//           Edit <code>src/App.tsx</code> and save to test HMR
-//         </p>
-//       </div>
-//       <p className="read-the-docs">
-//         Click on the Vite and React logos to learn more
-//       </p>
-//     </>
-//   )
-// }
+  @media screen and (min-width: 750px) {
+    flex-direction: row; /* Sidebar on the left, content on the right */
+  }
+`;
+
+export const MainContent = styled.div`
+  flex-grow: 1;
+  padding: 15px 20px;
+
+  @media screen and (min-width: 750px) {
+    margin-left: 250px; /* Leave space for sidebar */
+  }
+`;
+
+const GET_SECTIONS = gql`
+  query GetSections {
+    sections {
+      id
+      label
+      description
+    }
+  }
+`;
 
 function App() {
+  const { loading, error, data } = useQuery(GET_SECTIONS);
+  
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
+    
+  const sections = data?.sections?.map(
+    (section: any) => ({
+      id: section.id,
+      label: section.label,
+    })
+  ) || [];
+  
+  const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
+  const [activeSection, setActiveSection] = useState(sections[0]?.id || "");
+
+  useEffect(() => {
+    if (Object.keys(sectionRefs.current).length === 0) return;
+  
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(Number(entry.target.id));
+            entry.target.classList.add('active'); 
+          } else {
+            entry.target.classList.remove('active'); 
+          }
+        });
+      },
+      { rootMargin: "0px 0px -99% 0px", threshold: 0 }
+    );
+  
+    Object.values(sectionRefs.current).forEach((section) => {
+      if (section) {
+        observer.observe(section);
+      }
+    });
+  
+    return () => observer.disconnect();
+  }, [sections]);
+
+  const handleSectionClick = (sectionId: string) => {
+    const sectionElement = sectionRefs.current[sectionId];
+    setActiveSection(sectionId);
+
+    if (sectionElement) {
+      sectionElement.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
   return (
-    <div>
-      <Sidebar />
-      <MenuPage />
-    </div>
+    <CartProvider>
+      <Content>
+        <Sidebar sections={sections} isOpen={true} onSectionClick={handleSectionClick} activeSection={activeSection} />
+        <MainContent>
+          <MenuPage sectionRefs={sectionRefs} setActiveSection={setActiveSection} />
+        </MainContent>
+      </Content>
+    </CartProvider>
   );
 }
 

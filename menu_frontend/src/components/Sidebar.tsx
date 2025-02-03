@@ -1,50 +1,123 @@
-// import React from "react";
-import { useQuery, gql } from "@apollo/client";
+import styled from '@emotion/styled';
+import { motion } from 'framer-motion';
+import { useCart } from '../contexts/CartContext';
+import { useEffect, useState } from 'react';
+import CartModal from './CartModal';
 
-// const categories = [
-//   { id: "kueh-cakes", name: "Kuehs & Cakes" },
-//   { id: "kaya", name: "Kaya" },
-//   { id: "gift-bundles", name: "Gift Boxes & Bundles" },
-// ];
+interface SidebarProps {
+  sections: [{
+    label: string;
+    id: number;
+  }];
+  onSectionClick: (section: string) => void;
+  isOpen: boolean;
+  activeSection: number;
+}
 
-const GET_SECTIONS = gql`
-  query GetSections {
-    sections {
-      label
-    }
+const SidebarContainer = styled(motion.div)<{ isOpen: boolean }>`
+  background-color: #ffffff;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  overflow-y: auto;
+  transition: all 0.3s ease;
+
+  @media screen and (min-width: 750px) {
+    width: 250px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 1rem;
+    display: flex;
+    align-content: space-around;
+    flex-direction: column;
+    justify-content: space-around;
+  }
+
+  @media screen and (max-width: 749px) {
+    width: 100%;
+    height: auto;
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   }
 `;
 
-const Sidebar = () => {
-  const { loading, error, data } = useQuery(GET_SECTIONS);
+const SidebarList = styled.ul`
+  list-style: none;
+  padding: 0;
+  margin: 0;
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>;
+  @media screen and (max-width: 749px) {
+    display: flex;
+  }
+`;
 
-  const handleScroll = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-  };
+const SidebarItem = styled.li<{ isActive: boolean }>`
+  font-size: 1.2rem;
+  padding: 12px;
+  cursor: pointer;
+  color: #333;
+  transition: background-color 0.2s ease;
+  text-align: left;
+
+  background-color: ${({ isActive }) => (isActive ? '#7DAAFF' : 'transparent')}; /* Apply active background */
+  font-weight: ${({ isActive }) => (isActive ? 'bold' : 'normal')}; /* Make active item bold */
+
+  &:hover {
+    background-color: #f0f0f0;
+  }
+
+  @media screen and (max-width: 749px) {
+    width: 20%;
+    text-align: center;
+    font-size: 80%;
+  }
+`;
+
+const CartButton = styled.button`
+  margin: 16px;
+  padding: 12px;
+  background-color: #e0e0e0;
+  color: black;
+  border-radius: 8px;
+  border: none;
+  cursor: pointe;
+
+  &:hover {
+    background-color: #f0f0f0;
+  }
+`;
+
+const Sidebar = ({ sections, onSectionClick, isOpen, activeSection }: SidebarProps) => {
+  const { quantityIncludingDuplicates } = useCart();
+  const [isCartOpen, setIsCartOpen] = useState(false);
+
+  const totalItems = quantityIncludingDuplicates();
 
   return (
-    <aside className="sticky top-0 h-screen w-64 bg-white p-4 border-r hidden md:block">
-      <nav>
-        <ul className="space-y-4">
-          {data.sections.map((section: any) => (
-            <li key={section.label}>
-              <button
-                onClick={() => {
-                  console.log(`scrolling to ${section.label}`)
-                  handleScroll(section.label)
-                }}
-                className="text-gray-700 hover:text-red-500 transition"
-              >
-                {section.label}
-              </button>
-            </li>
-          ))}
-        </ul>
-      </nav>
-    </aside>
+    <SidebarContainer isOpen={isOpen}>
+      <SidebarList>
+        {sections.map((section) => (
+          <SidebarItem isActive={activeSection === section.id} key={section.label} onClick={() => onSectionClick(section.id.toString())}>
+            {section.label}
+          </SidebarItem>
+        ))}
+      </SidebarList>
+
+      <CartButton 
+        onClick={() => setIsCartOpen(true)}
+      >
+        🛒 Cart ({totalItems})
+      </CartButton>
+
+      {isCartOpen && <CartModal onClose={() => setIsCartOpen(false)} />}
+    </SidebarContainer>
   );
 };
 
