@@ -35,13 +35,10 @@ const GET_SECTIONS = gql`
 `;
 
 function App() {
-  const { loading, error, data } = useQuery(GET_SECTIONS);
+  const { data } = useQuery(GET_SECTIONS);
 
   console.log('data', data);
   
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>;
-    
   const sections = data?.sections?.map(
     (section: any) => ({
       id: section.id,
