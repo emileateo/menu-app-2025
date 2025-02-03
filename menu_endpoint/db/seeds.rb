@@ -48,7 +48,8 @@ pizza_margherita = Item.create!(
   label: 'Margherita Pizza',
   description: 'A classic pizza with fresh mozzarella, tomatoes, and basil.',
   price: 10.0,
-  available_quantity: 10
+  available_quantity: 10,
+  image_url: 'https://kestepizzago.com/cdn/shop/files/Margherita_900x.png?v=1684443293'
 )
 
 pizza_pepperoni = Item.create!(
@@ -57,7 +58,8 @@ pizza_pepperoni = Item.create!(
   label: 'Pepperoni Pizza',
   description: 'A pizza topped with spicy pepperoni and mozzarella.',
   price: 12.0,
-  available_quantity: 10
+  available_quantity: 10,
+  image_url: 'https://kestepizzago.com/cdn/shop/files/Diavola_900x.png?v=1684442849'
 )
 
 puts 'Pizza Items Created'
@@ -162,6 +164,7 @@ dessert_tiramisu = Item.create!(
   description: 'A classic Italian dessert with layers of coffee-soaked ladyfingers and mascarpone cheese.',
   price: 6.0,
   available_quantity: 10,
+  image_url: 'https://kestepizzago.com/cdn/shop/files/Tiramisu02_900x.png?v=1684445048'
 )
 
 dessert_panna_cotta = Item.create!(
@@ -171,6 +174,7 @@ dessert_panna_cotta = Item.create!(
   description: 'A creamy vanilla custard topped with fresh berries.',
   price: 5.0,
   available_quantity: 10,
+  image_url: 'https://img.freepik.com/premium-photo/food-photography-panna-cotta-glass-isolated-white-background_847439-3475.jpg'
 )
 
 puts 'Dessert Items Created'
@@ -199,6 +203,7 @@ na_drink_coffee = Item.create!(
   description: 'Brewed with freshly roasted beans.',
   price: 4.0,
   available_quantity: 10,
+  image_url: 'https://www.shutterstock.com/image-photo/cup-coffee-on-white-background-600nw-2502351597.jpg'
 )
 
 na_drink_matcha = Item.create!(
@@ -207,7 +212,8 @@ na_drink_matcha = Item.create!(
   label: 'Matcha Latte',
   description: 'Made with ceremonial grade matcha direct from Kyoto.',
   price: 6.0,
-  available_quantity: 10,
+  available_quantity: 0,
+  image_url: 'https://t4.ftcdn.net/jpg/06/49/44/19/360_F_649441929_JZGvp4GcO38ZX4QqtjrukttYrVJje5EO.jpg'
 )
 
 puts 'NA Drink Items Created'
@@ -236,6 +242,7 @@ alcoholic_drink_beer = Item.create!(
   description: 'Locally brewed tropical lager',
   price: 6.0,
   available_quantity: 10,
+  image_url: 'https://hips.hearstapps.com/del.h-cdn.co/assets/cm/15/11/3200x3272/54f65d39ab05d_-_183341797.jpg?resize=640:*'
 )
 
 puts 'Alcoholic Drink Item Created'
