@@ -10,6 +10,7 @@ interface ItemModalProps {
     description: string;
     price: number;
     availableQuantity: number;
+    imageUrl: string;
   } | null;
 }
 
@@ -85,7 +86,7 @@ const ItemModal = ({ isOpen, onClose, item }: ItemModalProps) => {
         onClick={(e) => e.stopPropagation()}
       >
         <CloseButton onClick={onClose}>&times;</CloseButton>
-        <ItemImage src="https://mrskueh.com/assets/images/atlas-core-active-storage/zw8m8fyv92m145ysfrt70ckz245u" alt={item.label} />
+        <ItemImage src={item.imageUrl} alt={item.label} />
         <h2>{item.label}</h2>
         <p>{item.description}</p>
         <p>${item.price.toFixed(2)}</p>

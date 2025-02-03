@@ -8,6 +8,7 @@ export interface ItemCardProps {
   description: string;
   price: number;
   availableQuantity: number;
+  imageUrl: string;
   unavailable?: boolean;
 }
 
@@ -55,7 +56,7 @@ const AddToCartButton = styled.button<{ unavailable?: boolean }>`
   }
 `;
 
-const ItemCard = ({ id, label, description, price, availableQuantity, onClick }: ItemCardProps & { onClick: () => void }) => {
+const ItemCard = ({ id, label, description, price, availableQuantity, imageUrl, onClick }: ItemCardProps & { onClick: () => void }) => {
   const { addToCart } = useCart();
 
   return (
@@ -69,10 +70,10 @@ const ItemCard = ({ id, label, description, price, availableQuantity, onClick }:
         whileHover={{ scale: 1.05 }}
       >
         <img
-          // src={`https://via.placeholder.com/150?text=${label}`} // Use your image URL here
-          src="https://mrskueh.com/assets/images/atlas-core-active-storage/zw8m8fyv92m145ysfrt70ckz245u"
+          src={imageUrl}
           alt={label}
           className="item-image"
+          style={{width: "-webkit-fill-available"}}
         />
       </ImageContainer>
       <TextContainer>

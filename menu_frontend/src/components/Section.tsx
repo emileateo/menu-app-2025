@@ -13,6 +13,7 @@ interface SectionProps {
     label: string;
     price: number;
     description: string;
+    imageUrl: string;
     availableQuantity: number;
   }[];
 }

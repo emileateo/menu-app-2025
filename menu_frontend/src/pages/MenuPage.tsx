@@ -17,6 +17,7 @@ const GET_MENU = gql`
           price
           description
           availableQuantity
+          imageUrl
         }
       }
     }
