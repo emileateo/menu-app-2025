@@ -3,7 +3,7 @@ import MenuPage from "./pages/MenuPage";
 import './App.css'
 import { CartProvider } from './contexts/CartContext';
 import { gql, useQuery } from '@apollo/client';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import Sidebar from './components/Sidebar';
 
 export const Content = styled.div`
