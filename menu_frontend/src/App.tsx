@@ -20,7 +20,11 @@ export const MainContent = styled.div`
   padding: 15px 20px;
 
   @media screen and (min-width: 750px) {
-    margin-left: 250px; /* Leave space for sidebar */
+    margin-left: 250px;
+  }
+    
+  @media screen and (max-width: 749px) {
+    margin-top: 5rem;
   }
 `;
 
