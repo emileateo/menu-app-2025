@@ -8,13 +8,16 @@ interface SectionProps {
   label: string;
   description?: string;
   isAvailable: boolean;
-  items: {
-    id: string;
-    label: string;
-    price: number;
-    description: string;
-    imageUrl: string;
-    availableQuantity: number;
+  sectionItems: {
+    displayOrder: number;
+    item: {
+      id: string;
+      label: string;
+      price: number;
+      description: string;
+      availableQuantity: number;
+      imageUrl: string;
+    }
   }[];
 }
 
@@ -68,8 +71,10 @@ const SectionItems = styled.div`
 `;
 
 const Section = forwardRef<HTMLDivElement, SectionProps>(
-  ({ id, label, description, items, isAvailable }, ref) => {
+  ({ id, label, description, sectionItems, isAvailable }, ref) => {
     const [selectedItem, setSelectedItem] = useState<null | ItemCardProps>(null);
+
+    const sortedSectionItems = [...sectionItems].sort((a: any, b: any) => a.displayOrder - b.displayOrder)
 
     return (
       <>
@@ -77,8 +82,8 @@ const Section = forwardRef<HTMLDivElement, SectionProps>(
           <SectionTitle>{label}</SectionTitle>
           {description && <SectionDescription>{description}</SectionDescription>}
           <SectionItems>
-            {items.map((item) => (
-              <ItemCard key={item.id} {...item} onClick={() => setSelectedItem(item)} />
+            {sortedSectionItems.map((sectionItem) => (
+              <ItemCard key={sectionItem.item.id} {...sectionItem.item} onClick={() => setSelectedItem(sectionItem.item)} />
             ))}
           </SectionItems>
         </SectionContainer>

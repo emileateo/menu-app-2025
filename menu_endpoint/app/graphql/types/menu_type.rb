@@ -8,6 +8,7 @@ module Types
     field :state, String
     field :start_date, GraphQL::Types::ISO8601Date
     field :end_date, GraphQL::Types::ISO8601Date
+    field :menu_sections, [ Types::MenuSectionType ], null: false
     field :sections, [ Types::SectionType ], null: false
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false

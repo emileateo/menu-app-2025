@@ -8,6 +8,8 @@ interface SidebarProps {
   sections: [{
     label: string;
     id: number;
+    description: string;
+    displayOrder: number;
   }];
   onSectionClick: (section: string) => void;
   isOpen: boolean;

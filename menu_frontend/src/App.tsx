@@ -3,7 +3,7 @@ import MenuPage from "./pages/MenuPage";
 import './App.css'
 import { CartProvider } from './contexts/CartContext';
 import { gql, useQuery } from '@apollo/client';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Sidebar from './components/Sidebar';
 
 export const Content = styled.div`
@@ -26,10 +26,13 @@ export const MainContent = styled.div`
 
 const GET_SECTIONS = gql`
   query GetSections {
-    sections {
-      id
-      label
-      description
+    menuSections {
+      displayOrder
+      section {
+        id
+        label
+        description
+      }
     }
   }
 `;
@@ -37,45 +40,43 @@ const GET_SECTIONS = gql`
 function App() {
   const { data } = useQuery(GET_SECTIONS);
 
-  console.log('data', data);
-  
-  const sections = data?.sections?.map(
-    (section: any) => ({
-      id: section.id,
-      label: section.label,
-    })
-  ) || [];
-  
-  console.log('sections', sections);
+  const sections = data?.menuSections
+  ?.map((menuSection: any) => ({
+    id: menuSection.section.id,
+    label: menuSection.section.label,
+    description: menuSection.section.description,
+    displayOrder: menuSection.displayOrder
+  }))
+  ?.sort((a: { displayOrder: number; }, b: { displayOrder: number; }) => a.displayOrder - b.displayOrder) || [];
 
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
   const [activeSection, setActiveSection] = useState(sections[0]?.id || "");
 
-  // useEffect(() => {
-  //   if (Object.keys(sectionRefs.current).length === 0) return;
+  useEffect(() => {
+    if (Object.keys(sectionRefs.current).length === 0) return;
   
-  //   const observer = new IntersectionObserver(
-  //     (entries) => {
-  //       entries.forEach((entry) => {
-  //         if (entry.isIntersecting) {
-  //           setActiveSection(Number(entry.target.id));
-  //           entry.target.classList.add('active'); 
-  //         } else {
-  //           entry.target.classList.remove('active'); 
-  //         }
-  //       });
-  //     },
-  //     { rootMargin: "0px 0px -99% 0px", threshold: 0 }
-  //   );
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(Number(entry.target.id));
+            entry.target.classList.add('active'); 
+          } else {
+            entry.target.classList.remove('active'); 
+          }
+        });
+      },
+      { rootMargin: "0px 0px -99% 0px", threshold: 0 }
+    );
   
-  //   Object.values(sectionRefs.current).forEach((section) => {
-  //     if (section) {
-  //       observer.observe(section);
-  //     }
-  //   });
+    Object.values(sectionRefs.current).forEach((section) => {
+      if (section) {
+        observer.observe(section);
+      }
+    });
   
-  //   return () => observer.disconnect();
-  // }, [sections]);
+    return () => observer.disconnect();
+  }, [sections]);
 
   const handleSectionClick = (sectionId: string) => {
     const sectionElement = sectionRefs.current[sectionId];

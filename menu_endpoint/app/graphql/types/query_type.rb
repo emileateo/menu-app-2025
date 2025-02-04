@@ -29,12 +29,20 @@ module Types
       argument :ids, [ ID ], required: false, description: "IDs of the menus (leave blank to return all)"
     end
 
+    field :menu_sections, [ Types::MenuSectionType, null: true ], null: true, description: "Fetches a list of menu_sections given a list of IDs" do
+      argument :ids, [ ID ], required: false, description: "IDs of the menu_sections (leave blank to return all)"
+    end
+
     field :section, Types::SectionType, null: true, description: "Fetches a section given its ID" do
       argument :id, ID, required: true, description: "ID of the section"
     end
 
     field :sections, [ Types::SectionType ], null: true, description: "Fetches a list of sections given a list of IDs" do
       argument :ids, [ ID ], required: false, description: "IDs of the sections (leave blank to return all)"
+    end
+
+    field :section_items, [ Types::SectionItemType ], null: true, description: "Fetches a list of section_items given a list of IDs" do
+      argument :ids, [ ID ], required: false, description: "IDs of the section_items (leave blank to return all)"
     end
 
     field :item, Types::ItemType, null: true, description: "Fetches an item given its ID." do
@@ -74,6 +82,14 @@ module Types
       end
     end
 
+    def menu_sections(ids: [])
+      if ids.present?
+        ids.map { |id| MenuSection.find(id) }.compact
+      else
+        MenuSection.all
+      end
+    end
+
     def section(id:)
       Section.find(id)
     end
@@ -83,6 +99,14 @@ module Types
         ids.map { |id| Section.find(id) }.compact
       else
         Section.all
+      end
+    end
+
+    def section_items(ids: [])
+      if ids.present?
+        ids.map { |id| SectionItem.find(id) }.compact
+      else
+        SectionItem.all
       end
     end
 
